@@ -137,6 +137,16 @@ int remove_last_node(list_ptr l) {
 	}
 }
 
+node_ptr search(list_ptr l, char_ptr str) {
+	node_ptr node = l->first;
+
+	while (node != NULL && strcmp(node->cont, str) != 0) {
+		node = node->next;
+	}
+
+	return node;
+}
+
 list_ptr create_test_list() {
 	list_ptr my_list = create_list();
 	add_node(my_list, "Hey!");
@@ -171,10 +181,29 @@ void test3() {
 	destroy_list(my_list);
 }
 
+void test4() {
+	printf("Test #4\n");
+	list_ptr my_list = create_test_list();
+	node_ptr node = search(my_list, "Hey!");
+	if (node == get_first_node(my_list)) {
+		printf("Found! (Its the first node)\n");
+	}
+	node = search(my_list, "Go!");
+	if (node == get_last_node(my_list)) {
+		printf("Found! (Its the last node)\n");
+	}
+	node = search(my_list, "Gabba");
+	if (node == NULL) {
+		printf("Not found!\n");
+	}
+	destroy_list(my_list);
+}
+
 int main(int argc, char** argv) {
 	test1();
 	test2();
 	test3();
+	test4();
 	return SUCCESS;
 }
 
