@@ -2,6 +2,9 @@
 #include <malloc.h>
 #include <string.h>
 
+#define SUCCESS 0
+#define ERROR -1
+
 typedef struct node *node_ptr;
 
 typedef char *char_ptr;
@@ -92,14 +95,86 @@ void show(list_ptr l) {
 	}
 }
 
-int main() {
+node_ptr get_first_node(list_ptr l) {
+	return l->first;
+}
+
+node_ptr get_last_node(list_ptr l) {
+	return l->last;
+}
+
+int remove_first_node(list_ptr l) {
+	if (is_empty(l)) {
+		return ERROR;
+	} else if (l->first == l->last) { 
+		destroy_node(l->first);
+		l->first = NULL;
+		l->last = NULL;
+	} else {
+		node_ptr first = l->first;
+		node_ptr second = l->first->next;
+		l->first = second;
+		second->prev = NULL;;
+		destroy_node(first);
+		return SUCCESS;
+	}
+}
+
+int remove_last_node(list_ptr l) {
+	if (is_empty(l)) {
+		return ERROR;
+	} else if (l->first == l->last) {
+		destroy_node(l->last);
+		l->first = NULL;
+		l->last = NULL;
+	} else {
+		node_ptr last = l->last;
+		node_ptr previous = l->last->prev;
+		l->last = previous;
+		previous->next = NULL;
+		destroy_node(last);
+		return SUCCESS;
+	}
+}
+
+list_ptr create_test_list() {
 	list_ptr my_list = create_list();
 	add_node(my_list, "Hey!");
 	add_node(my_list, "Ho!");
 	add_node(my_list, "Lets...");
 	add_node(my_list, "Go!");
+	return my_list;
+}
+
+void test1() {
+	printf("Test #1\n");
+	list_ptr my_list = create_test_list();
 	show(my_list);
 	destroy_list(my_list);
-	return 0;
+}
+
+void test2() {
+	printf("Test #2\n");
+	list_ptr my_list = create_test_list();
+	while(remove_first_node(my_list) == SUCCESS) {
+		show(my_list);
+	}
+	destroy_list(my_list);
+}
+
+void test3() {
+	printf("Test #3\n");
+	list_ptr my_list = create_test_list();
+	while(remove_last_node(my_list) == SUCCESS) {
+		show(my_list);
+	}
+	destroy_list(my_list);
+}
+
+int main(int argc, char** argv) {
+	test1();
+	test2();
+	test3();
+	return SUCCESS;
 }
 
